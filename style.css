@@ -76,7 +76,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .hero-lead{font-size:var(--step-lead);line-height:1.22;letter-spacing:-.02em;max-width:24ch;font-weight:500}
 .hero-sub{margin-top:16px;color:var(--muted-d);max-width:36ch}
 .hero-act{margin-top:32px;display:flex;flex-wrap:wrap;align-items:center;gap:16px 28px}
-.wordmark{font-weight:400;letter-spacing:-.045em;line-height:.9;white-space:nowrap;margin:0}
+.wordmark{font-family:Marcellus,"Times New Roman",serif;font-weight:400;letter-spacing:-.02em;line-height:.95;white-space:nowrap;margin:0}
 
 /* ---------- seções ---------- */
 .sec{padding:var(--gap) var(--pad) 0}
@@ -248,7 +248,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
   .hero{position:relative;height:100svh;min-height:600px;padding:0 var(--m) 0 var(--pad);display:flex;flex-direction:column;justify-content:center}
   .hero-say{margin-top:-8svh}
   .hero-lead{font-size:clamp(1.6rem,1.1rem + 1.5vw,2.25rem)}
-  .wordmark{position:absolute;right:var(--m);bottom:30px;font-size:8.3vw;transform-origin:100% 100%}
+  .wordmark{position:absolute;right:var(--m);bottom:34px;font-size:6.5vw;transform-origin:100% 100%}
 
   /* peças dentro do palco */
   .layer .quote-card,.layer .mapa,.layer .doc-wrap,.layer .plate{position:absolute;inset:0;margin:0}
@@ -296,7 +296,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
   .stage{background:var(--navy);padding:calc(var(--nav-h) + 4px) 12px 0;height:54svh;min-height:340px}
   .layer>img{object-position:50% 12%}
   .hero{position:relative;padding:0 var(--pad) 56px;display:flex;flex-direction:column}
-  .wordmark{order:-1;font-size:12.7vw;margin-top:-3.4vw;margin-left:-.03em;position:relative;z-index:2}
+  .wordmark{order:-1;font-size:10.4vw;margin-top:-3vw;margin-left:0;position:relative;z-index:2}
   .hero-say{margin-top:22px}
   .hero-act .btn{flex:1 1 100%}
 
@@ -349,7 +349,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 @media (min-width:600px) and (max-width:959.98px){
   .stage{height:62svh}
   .quote p{font-size:2rem;max-width:22ch}
-  .wordmark{font-size:12.4vw}
+  .wordmark{font-size:10vw}
   .hero-act .btn,.rows .btn,.faq-act .btn,.contact-act .btn{flex:0 0 auto;width:auto}
   .names{columns:3}
   .cells{grid-template-columns:1fr 1fr}
@@ -393,25 +393,12 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .stars{display:inline-flex;gap:2px;color:var(--sand)}
 .stars svg{width:18px;height:18px}
 
-/* slogan: o quarto escuro que acende */
-.quote-card{display:flex;flex-direction:column;margin:0}
-.room{position:relative;overflow:hidden;aspect-ratio:4/3;background:#070f22}
-.room img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 28%}
-.room .dim{filter:brightness(.2) saturate(.5)}
-.room .lit{clip-path:circle(140% at 68% 36%)}
-.quote{padding:clamp(24px,3.4vw,48px)}
-.quote p{max-width:20ch}
-
 /* avaliações do Google */
 .nota{background:var(--navy);color:var(--white);display:flex;flex-direction:column;justify-content:center;padding:clamp(28px,4.4vw,64px)}
 .nota-num{font-size:clamp(6rem,14vw,13rem);line-height:.86;letter-spacing:-.06em;font-weight:500}
 .stars-big{margin-top:22px}
 .stars-big svg{width:clamp(28px,3vw,44px);height:clamp(28px,3vw,44px)}
 .nota-sub{margin-top:14px;font-size:var(--step-lead);letter-spacing:-.02em}
-.revs{margin-top:44px;display:grid;gap:34px}
-.rev p{font-size:var(--step-lead);line-height:1.28;letter-spacing:-.02em;max-width:32ch}
-.rev footer{margin-top:10px;font-size:var(--step-small);color:var(--muted)}
-
 /* células e blocos de contato */
 .cell-wa{background:var(--wa);color:var(--wa-ink);font-weight:600}
 .cell-wa:hover{background:#1fbd5a}
@@ -432,9 +419,6 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .foot-photo img{object-position:50% 12%}
 
 @media (min-width:960px){
-  .layer .quote-card::before{display:none}
-  .layer .quote{position:static;transition:none}
-  .layer .room{flex:1;aspect-ratio:auto;min-height:0}
   .layer .nota{position:absolute;inset:0;margin:0}
   .hero-say{margin-top:-10svh}
 }
@@ -456,4 +440,33 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
   .sobre .plate{aspect-ratio:16/10}
   .sobre .plate img{object-position:50% 22%}
   .faq .plate-cut img{width:300px}
+}
+
+
+/* =====================================================================
+   VERSÃO 3: logo na abertura, nome em Marcellus, slogan que desliza
+   ===================================================================== */
+/* abertura com a logo dele */
+.opener{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0}
+.opener .logo-mark{width:clamp(64px,8vw,96px);height:auto}
+.opener .logo-name{margin-top:clamp(18px,2.4vw,28px);font-family:Marcellus,"Times New Roman",serif;font-size:clamp(1.6rem,1rem + 2.6vw,3rem);letter-spacing:.06em;line-height:1;white-space:nowrap}
+.opener .logo-tag{margin-top:12px;font-size:clamp(.6875rem,.6rem + .3vw,.875rem);letter-spacing:.12em;color:var(--muted-d);white-space:nowrap}
+
+/* slogan: tipografia grande que desliza com a rolagem */
+.quote-card{position:relative;background:var(--navy);color:var(--white);display:flex;flex-direction:column;justify-content:center;padding:clamp(32px,5vw,72px);margin:0;overflow:hidden}
+.quote-card .quote{padding:0}
+.quote-card .quote p{font-family:Marcellus,"Times New Roman",serif;font-weight:400;font-size:clamp(2rem,1.2rem + 2.8vw,4rem);line-height:1.08;letter-spacing:-.01em;max-width:13ch}
+.quote-mark{width:clamp(36px,3.4vw,52px);height:auto;color:var(--sand);margin-bottom:clamp(28px,4vw,48px)}
+.quote-by{margin-top:clamp(24px,3vw,40px);color:var(--muted-d);font-size:var(--step-body)}
+.slide-text .w{display:inline-block;white-space:nowrap}
+.slide-text .ch{display:inline-block;will-change:transform,opacity}
+
+@media (min-width:960px){
+  .layer .quote-card{position:absolute;inset:0;padding:clamp(40px,5vw,80px)}
+  .layer .quote-card .quote{position:static;inset:auto;display:block}
+  .layer .quote-card .quote p{font-size:clamp(2.4rem,1.2rem + 2.6vw,4.4rem)}
+}
+@media (max-width:959.98px){
+  .quote-card{margin:0 calc(var(--pad) * -1) 72px;min-height:78svh}
+  .quote-card .quote p{font-size:clamp(2rem,9vw,3.2rem)}
 }

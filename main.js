@@ -189,14 +189,17 @@
   var ST = window.ScrollTrigger;
   gsap.registerPlugin(ST);
 
-  /* abertura: a marca RB se desenha, a cortina sobe */
+  /* abertura: a logo dele se desenha, o nome aparece, a luz abre a pagina */
+  var seen = false;
+  try { seen = sessionStorage.getItem('rb-open') === '1'; sessionStorage.setItem('rb-open', '1'); } catch (err) { /* sem armazenamento */ }
   var opener = document.createElement('div');
   opener.className = 'opener';
-  opener.innerHTML = '<svg viewBox="0 0 670 696" aria-hidden="true">' +
+  opener.innerHTML = '<svg class="logo-mark" viewBox="0 0 670 696" aria-hidden="true">' +
     '<path d="M104 680C50 642 15 584 15 512V100a85 85 0 0 1 85-85h302a157 157 0 0 1 157 157c0 62-30 108-78 138" fill="none" stroke="currentColor" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>' +
-    '<path d="M15 327h466a174 174 0 0 1 174 174c0 78-48 142-116 166-18 6-32 2-44-10L190 340" fill="none" stroke="currentColor" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    '<path d="M15 327h466a174 174 0 0 1 174 174c0 78-48 142-116 166-18 6-32 2-44-10L190 340" fill="none" stroke="currentColor" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+    '<p class="logo-name">RODRIGO BARBOSA</p>' +
+    '<p class="logo-tag">PSICÓLOGO CLÍNICO E NEUROPSICÓLOGO | CRP 03/25741</p>';
   document.body.appendChild(opener);
-  var mark = $('svg', opener);
   var strokes = $$('path', opener);
   strokes.forEach(function (p) {
     var len = 2200;
@@ -204,7 +207,7 @@
     p.style.strokeDasharray = len;
     p.style.strokeDashoffset = len;
   });
-  /* a luz acende a partir da marca: um furo redondo cresce na cortina */
+  var logoParts = $$('svg, p', opener);
   var hole = { r: 0 };
   function cut() {
     var m = 'radial-gradient(circle at 50% 50%, transparent ' + hole.r + 'vmax, #000 ' + (hole.r + 0.4) + 'vmax)'; /* taste-skill-ignore: mascara da abertura, nao e preenchimento */
@@ -214,18 +217,20 @@
 
   var heroImg = $('.layer[data-layer="hero"] img');
   var intro = gsap.timeline({ defaults: { ease: 'power3.out' } });
+  if (seen) { opener.remove(); intro.progress(1); }
   intro
-    .to(strokes[0], { strokeDashoffset: 0, duration: 0.4, ease: 'power2.inOut' }, 0)
-    .to(strokes[1], { strokeDashoffset: 0, duration: 0.4, ease: 'power2.inOut' }, 0.14)
-    .to(mark, { color: '#dcb88e', duration: 0.14, ease: 'power1.out' }, 0.4)
-    .to(mark, { scale: 0.86, opacity: 0, duration: 0.25, ease: 'power2.in' }, 0.5)
-    .to(hole, { r: 80, duration: 0.58, ease: 'power2.inOut', onUpdate: cut }, 0.5)
-    .from(heroImg, { scale: 1.12, duration: 1.7, ease: 'power2.out' }, 0.58)
-    .from('.hero-title', { y: 26, duration: 0.6 }, 0.62)
-    .from('.hero-sub, .hero-act, .hero-proof', { y: 22, opacity: 0, duration: 0.6, stagger: 0.07 }, 0.68)
-    .from('.wordmark', { yPercent: 30, duration: 0.7 }, 0.66)
-    .from('.nav-mark, .nav-links a, .nav-toggle, .nav-ig', { y: -10, opacity: 0, duration: 0.45, stagger: 0.04 }, 0.74)
-    .add(function () { opener.remove(); }, 1.1);
+    .to(strokes[0], { strokeDashoffset: 0, duration: 0.42, ease: 'power2.inOut' }, 0)
+    .to(strokes[1], { strokeDashoffset: 0, duration: 0.42, ease: 'power2.inOut' }, 0.12)
+    .from('.opener .logo-name', { opacity: 0, x: -24, duration: 0.42 }, 0.24)
+    .from('.opener .logo-tag', { opacity: 0, x: -16, duration: 0.4 }, 0.34)
+    .to(logoParts, { opacity: 0, y: -10, duration: 0.3, ease: 'power2.in', stagger: 0.03 }, 0.66)
+    .to(hole, { r: 80, duration: 0.42, ease: 'power2.in', onUpdate: cut }, 0.7)
+    .from(heroImg, { scale: 1.1, duration: 1.6, ease: 'power2.out' }, 0.7)
+    .from('.hero-title', { y: 26, duration: 0.6 }, 0.86)
+    .from('.hero-sub, .hero-act, .hero-proof', { y: 22, opacity: 0, duration: 0.6, stagger: 0.07 }, 0.9)
+    .from('.wordmark', { yPercent: 30, duration: 0.7 }, 0.88)
+    .from('.nav-mark, .nav-links a, .nav-toggle, .nav-ig', { y: -10, opacity: 0, duration: 0.45, stagger: 0.04 }, 0.94)
+    .add(function () { opener.remove(); }, 1.14);
 
   /* assinatura: o nome pesa e encolhe quando a primeira tela sai */
   gsap.to('.wordmark', {
@@ -238,17 +243,33 @@
     scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
   });
 
-  /* o slogan: o retrato sai do escuro quando a luz acende */
-  var litImg = $('.room .lit');
-  if (litImg) {
-    gsap.fromTo(litImg,
-      { clipPath: 'circle(0% at 68% 36%)' },
-      { clipPath: 'circle(140% at 68% 36%)', duration: 1.5, ease: 'power2.inOut',
+  /* o slogan: as letras entram deslizando da esquerda para a direita conforme a rolagem */
+  var slide = $('.slide-text');
+  if (slide) {
+    var full = slide.textContent;
+    slide.setAttribute('aria-label', full);
+    slide.innerHTML = full.split(' ').map(function (w) {
+      return '<span class="w" aria-hidden="true">' + w.split('').map(function (ch) {
+        return '<span class="ch">' + ch + '</span>';
+      }).join('') + '</span>';
+    }).join(' ');
+    var chars = $$('.ch', slide);
+    gsap.fromTo(chars,
+      { x: -22, opacity: 0.12 },
+      { x: 0, opacity: 1, ease: 'power2.out', stagger: 0.035, duration: 0.6,
         scrollTrigger: {
           trigger: desktop.matches ? '.intro' : '.quote-card',
-          start: desktop.matches ? 'top 38%' : 'top 62%',
-          toggleActions: 'play none none reverse'
+          start: desktop.matches ? 'top 85%' : 'top 75%',
+          end: desktop.matches ? 'top 15%' : 'center 45%',
+          scrub: 0.6
         } });
+    gsap.fromTo(['.quote-mark', '.quote-by'], { x: -40, opacity: 0.2 }, { x: 0, opacity: 1, ease: 'none',
+      scrollTrigger: {
+        trigger: desktop.matches ? '.intro' : '.quote-card',
+        start: desktop.matches ? 'top 85%' : 'top 75%',
+        end: desktop.matches ? 'top 40%' : 'top 35%',
+        scrub: 0.6
+      } });
   }
 
   /* a luz acende */
@@ -266,7 +287,7 @@
     ['.sinais', '.h, .lede, legend, .row, .note, .btn'],
     ['.etapas', '.h, .lede, .slip'],
     ['.laudo', '.h, .lede, .tabs button, .body, .cell'],
-    ['.provas', '.h, .rev, .faq-act > *'],
+    ['.provas', '.h, .lede, .faq-act > *'],
     ['.terapia', '.h, .lede, .names li'],
     ['.sobre', '.h, .letter p, .h-sm, .pairs li, .body'],
     ['.faq', '.h, .facts li, details, .faq-act > *'],
