@@ -113,6 +113,7 @@
   var form = $('#sinais-form');
   var count = $('#mapa-count');
   var send = $('#sinais-send');
+  var sendLabel = $('#sinais-send-label');
   function plural(n, one, many) { return n + ' ' + (n === 1 ? one : many); }
   function updateMapa(changed) {
     var checked = $$('input:checked', form);
@@ -134,9 +135,9 @@
     if (checked.length) {
       msg = 'Olá, Rodrigo. Marquei estes sinais no seu site e gostaria de conversar sobre uma avaliação:\n' +
         checked.map(function (i) { return '• ' + i.value; }).join('\n');
-      send.textContent = 'Enviar meus sinais pelo WhatsApp';
+      sendLabel.textContent = 'Enviar meus sinais pelo WhatsApp';
     } else {
-      send.textContent = 'Conversar sobre esses sinais';
+      sendLabel.textContent = 'Conversar sobre esses sinais';
     }
     send.href = WA + encodeURIComponent(msg);
   }
@@ -195,25 +196,36 @@
     '<path d="M104 680C50 642 15 584 15 512V100a85 85 0 0 1 85-85h302a157 157 0 0 1 157 157c0 62-30 108-78 138" fill="none" stroke="currentColor" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>' +
     '<path d="M15 327h466a174 174 0 0 1 174 174c0 78-48 142-116 166-18 6-32 2-44-10L190 340" fill="none" stroke="currentColor" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   document.body.appendChild(opener);
+  var mark = $('svg', opener);
   var strokes = $$('path', opener);
   strokes.forEach(function (p) {
     var len = 2200;
-    try { len = p.getTotalLength(); } catch (err) { /* mantém o valor padrão */ }
+    try { len = p.getTotalLength(); } catch (err) { /* mantem o valor padrao */ }
     p.style.strokeDasharray = len;
     p.style.strokeDashoffset = len;
   });
+  /* a luz acende a partir da marca: um furo redondo cresce na cortina */
+  var hole = { r: 0 };
+  function cut() {
+    var m = 'radial-gradient(circle at 50% 50%, transparent ' + hole.r + 'vmax, #000 ' + (hole.r + 0.4) + 'vmax)'; /* taste-skill-ignore: mascara da abertura, nao e preenchimento */
+    opener.style.webkitMaskImage = m;
+    opener.style.maskImage = m;
+  }
 
   var heroImg = $('.layer[data-layer="hero"] img');
   var intro = gsap.timeline({ defaults: { ease: 'power3.out' } });
   intro
-    .to(strokes[0], { strokeDashoffset: 0, duration: 0.38, ease: 'power2.inOut' }, 0)
-    .to(strokes[1], { strokeDashoffset: 0, duration: 0.38, ease: 'power2.inOut' }, 0.14)
-    .to(opener, { yPercent: -100, duration: 0.5, ease: 'power3.inOut' }, 0.56)
-    .from(heroImg, { scale: 1.1, duration: 1.6, ease: 'power2.out' }, 0.56)
-    .from('.wordmark', { yPercent: 30, duration: 0.6 }, 0.6)
-    .from('.hero-lead, .hero-sub, .hero-act', { y: 24, opacity: 0, duration: 0.6, stagger: 0.07 }, 0.62)
-    .from('.nav-mark, .nav-links a, .nav-toggle', { y: -10, opacity: 0, duration: 0.45, stagger: 0.04 }, 0.7)
-    .add(function () { opener.remove(); });
+    .to(strokes[0], { strokeDashoffset: 0, duration: 0.4, ease: 'power2.inOut' }, 0)
+    .to(strokes[1], { strokeDashoffset: 0, duration: 0.4, ease: 'power2.inOut' }, 0.14)
+    .to(mark, { color: '#dcb88e', duration: 0.14, ease: 'power1.out' }, 0.4)
+    .to(mark, { scale: 0.86, opacity: 0, duration: 0.25, ease: 'power2.in' }, 0.5)
+    .to(hole, { r: 80, duration: 0.58, ease: 'power2.inOut', onUpdate: cut }, 0.5)
+    .from(heroImg, { scale: 1.12, duration: 1.7, ease: 'power2.out' }, 0.58)
+    .from('.hero-title', { y: 26, duration: 0.6 }, 0.62)
+    .from('.hero-sub, .hero-act, .hero-proof', { y: 22, opacity: 0, duration: 0.6, stagger: 0.07 }, 0.68)
+    .from('.wordmark', { yPercent: 30, duration: 0.7 }, 0.66)
+    .from('.nav-mark, .nav-links a, .nav-toggle, .nav-ig', { y: -10, opacity: 0, duration: 0.45, stagger: 0.04 }, 0.74)
+    .add(function () { opener.remove(); }, 1.1);
 
   /* assinatura: o nome pesa e encolhe quando a primeira tela sai */
   gsap.to('.wordmark', {
@@ -226,17 +238,22 @@
     scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
   });
 
+  /* o slogan: o retrato sai do escuro quando a luz acende */
+  var litImg = $('.room .lit');
+  if (litImg) {
+    gsap.fromTo(litImg,
+      { clipPath: 'circle(0% at 68% 36%)' },
+      { clipPath: 'circle(140% at 68% 36%)', duration: 1.5, ease: 'power2.inOut',
+        scrollTrigger: {
+          trigger: desktop.matches ? '.intro' : '.quote-card',
+          start: desktop.matches ? 'top 38%' : 'top 62%',
+          toggleActions: 'play none none reverse'
+        } });
+  }
+
   /* a luz acende */
   var mm = gsap.matchMedia();
   mm.add('(min-width: 960px)', function () {
-    var card = $('.layer .quote-card');
-    if (card) {
-      ST.create({
-        trigger: '.intro', start: 'top 28%',
-        onEnter: function () { card.classList.add('is-lit'); },
-        onLeaveBack: function () { card.classList.remove('is-lit'); }
-      });
-    }
     $$('.layer .plate img').forEach(function (img) {
       gsap.fromTo(img, { scale: 1.08 }, { scale: 1, ease: 'none',
         scrollTrigger: { trigger: img.closest('.layer') ? $('[data-stage-for="' + img.closest('.layer').getAttribute('data-layer') + '"]') : img, start: 'top bottom', end: 'bottom top', scrub: true } });
@@ -245,15 +262,16 @@
 
   /* entradas: cada parte da seção sobe em sequência, uma vez */
   var groups = [
-    ['.intro', '.h, .narrow p'],
+    ['.intro', '.h, .narrow p, .h-sm, .pairs li'],
     ['.sinais', '.h, .lede, legend, .row, .note, .btn'],
     ['.etapas', '.h, .lede, .slip'],
     ['.laudo', '.h, .lede, .tabs button, .body, .cell'],
+    ['.provas', '.h, .rev, .faq-act > *'],
     ['.terapia', '.h, .lede, .names li'],
     ['.sobre', '.h, .letter p, .h-sm, .pairs li, .body'],
     ['.faq', '.h, .facts li, details, .faq-act > *'],
-    ['.contact', '.h, .rows-big p, .contact-photo, .contact-act > *'],
-    ['.foot', '.foot-mark, .foot-menu nav a, .foot-cols p, .legal']
+    ['.contact', '.h, .rows-big p, .contact-photo, .tile'],
+    ['.foot', '.foot-mark, .foot-menu nav a, .foot-soc, .legal']
   ];
   groups.forEach(function (g) {
     var root = $(g[0]);
@@ -263,7 +281,7 @@
     /* o estado escondido so entra quando a peca esta chegando: o que esta longe fica visivel */
     items.forEach(function (el) {
       ST.create({
-        trigger: el, start: 'top 122%', once: true,
+        trigger: el, start: 'top 112%', once: true,
         onEnter: function () {
           if (el.getBoundingClientRect().top > window.innerHeight * 0.9) {
             gsap.set(el, { opacity: 0, y: 24 });

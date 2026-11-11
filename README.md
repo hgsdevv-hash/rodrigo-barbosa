@@ -22,6 +22,7 @@ Parte interativa: em "Você se reconhece?", o visitante marca sinais e as funç�
 - O bloco do laudo é um modelo ilustrativo, sem dados de paciente.
 - Itens que os sites de referência mostram e nós não temos como afirmar: tempo de atuação, número médio de sessões, parcelamento, nota no Google, se emite documento para reembolso de plano.
 - Dúvida "Preciso de encaminhamento médico?" foi respondida com "não"; confirmar.
+- Avaliações do Google: nota 5,0 e 221 avaliações em 11/11/2026; os quatro trechos são de avaliações públicas, com nome abreviado. O Conselho Federal de Psicologia restringe o uso de depoimentos na divulgação: o Rodrigo precisa decidir se mantém os trechos ou só a nota com o link.
 - Mais fotos: só existem 3 (retrato de terno em alta, recorte à mesa em baixa resolução, fachada). Fotos do consultório por dentro melhorariam muito.
 - Domínio: hoje ele usa psicologorodrigobn.com (Wix).
 - Tirar o `noindex` e trocar a fonte para arquivo local antes de publicar no domínio.
