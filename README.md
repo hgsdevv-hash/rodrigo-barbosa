@@ -20,6 +20,8 @@ Parte interativa: em "Você se reconhece?", o visitante marca sinais e as funç�
 - Valores, número de sessões e convênios (hoje a resposta manda para o WhatsApp).
 - Horários de atendimento (está "com hora marcada").
 - O bloco do laudo é um modelo ilustrativo, sem dados de paciente.
+- Itens que os sites de referência mostram e nós não temos como afirmar: tempo de atuação, número médio de sessões, parcelamento, nota no Google, se emite documento para reembolso de plano.
+- Dúvida "Preciso de encaminhamento médico?" foi respondida com "não"; confirmar.
 - Mais fotos: só existem 3 (retrato de terno em alta, recorte à mesa em baixa resolução, fachada). Fotos do consultório por dentro melhorariam muito.
 - Domínio: hoje ele usa psicologorodrigobn.com (Wix).
 - Tirar o `noindex` e trocar a fonte para arquivo local antes de publicar no domínio.
