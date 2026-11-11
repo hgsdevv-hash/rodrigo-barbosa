@@ -26,7 +26,7 @@ Parte interativa: em "Você se reconhece?", o visitante marca sinais e as funç�
 - Logo: refeita a partir dos cards do Instagram (marca RB + nome em Marcellus + linha do CRP). Se ele tiver o arquivo original (SVG ou PNG), trocar na abertura.
 - Mais fotos: só existem 3 (retrato de terno em alta, recorte à mesa em baixa resolução, fachada). Fotos do consultório por dentro melhorariam muito.
 - Domínio: hoje ele usa psicologorodrigobn.com (Wix).
-- Tirar o `noindex` e trocar a fonte para arquivo local antes de publicar no domínio.
+- Lançamento: tudo pronto em `_lancamento/` (fora do Git). Ver `_lancamento/LEIA-ME.md`; aplicar com `python _lancamento/aplicar.py` depois de preencher domínio e e-mail.
 
 ## Origem do conteúdo
 
