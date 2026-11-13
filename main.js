@@ -10,6 +10,7 @@
   var WA = 'https://wa.me/5575981105474?text=';
 
   var nav = $('#nav');
+  var isHome = !!$('.split');
   var panel = $('.stage-panel');
 
   /* ---------- menu no celular ---------- */
@@ -81,7 +82,7 @@
   else if (desktop.addListener) desktop.addListener(layout);
 
   /* ---------- barra: azul na primeira tela, clara depois ---------- */
-  var hero = $('.hero');
+  var hero = $('.hero') || $('.on-hero');
   if (hero && 'IntersectionObserver' in window) {
     new IntersectionObserver(function (entries) {
       nav.classList.toggle('is-paper', !entries[0].isIntersecting);
@@ -189,7 +190,29 @@
   var ST = window.ScrollTrigger;
   gsap.registerPlugin(ST);
 
+  /* rolagem suave: a roda do mouse desliza; no celular o toque continua nativo */
+  var lenis = null;
+  var mouse = window.matchMedia('(pointer: fine)').matches;
+  if (typeof window.Lenis !== 'undefined' && mouse && !navigator.webdriver) {
+    lenis = new window.Lenis({ duration: 1.1, easing: function (t) { return 1 - Math.pow(1 - t, 3.2); }, smoothWheel: true, syncTouch: false });
+    lenis.on('scroll', ST.update);
+    gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
+    gsap.ticker.lagSmoothing(0);
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href^="#"]');
+      if (!a) return;
+      var id = a.getAttribute('href');
+      if (id.length < 2) return;
+      var alvo = document.querySelector(id);
+      if (!alvo) return;
+      e.preventDefault();
+      lenis.scrollTo(alvo, { offset: -(nav ? nav.offsetHeight + 16 : 80), duration: 1.4 });
+      history.replaceState(null, '', id);
+    });
+  }
+
   /* abertura: a logo dele se desenha, o nome aparece, a luz abre a pagina */
+  if (isHome) {
   var seen = false;
   try { seen = sessionStorage.getItem('rb-open') === '1'; sessionStorage.setItem('rb-open', '1'); } catch (err) { /* sem armazenamento */ }
   var opener = document.createElement('div');
@@ -228,15 +251,17 @@
     .from(heroImg, { scale: 1.1, duration: 1.6, ease: 'power2.out' }, 0.7)
     .from('.hero-title', { y: 26, duration: 0.6 }, 0.86)
     .from('.hero-sub, .hero-act, .hero-proof', { y: 22, opacity: 0, duration: 0.6, stagger: 0.07 }, 0.9)
-    .from('.wordmark', { yPercent: 30, duration: 0.7 }, 0.88)
+    .from('.wordmark', { yPercent: 30, duration: 0.7, clearProps: 'transform' }, 0.88)
     .from('.nav-mark, .nav-links a, .nav-toggle, .nav-ig', { y: -10, opacity: 0, duration: 0.45, stagger: 0.04 }, 0.94)
     .add(function () { opener.remove(); }, 1.14);
 
   /* assinatura: o nome pesa e encolhe quando a primeira tela sai */
-  gsap.to('.wordmark', {
-    scale: 0.93, ease: 'none',
-    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
-  });
+  if (desktop.matches) {
+    gsap.to('.wordmark', {
+      scale: 0.93, ease: 'none',
+      scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+    });
+  }
   /* a foto do palco respira com a rolagem */
   gsap.to(heroImg, {
     yPercent: -3, ease: 'none',
@@ -255,7 +280,7 @@
     }).join(' ');
     var chars = $$('.ch', slide);
     gsap.fromTo(chars,
-      { x: -22, opacity: 0.12 },
+      { x: -22, opacity: 0.28 },
       { x: 0, opacity: 1, ease: 'power2.out', stagger: 0.035, duration: 0.6,
         scrollTrigger: {
           trigger: desktop.matches ? '.intro' : '.quote-card',
@@ -263,7 +288,7 @@
           end: desktop.matches ? 'top 15%' : 'center 45%',
           scrub: 0.6
         } });
-    gsap.fromTo(['.quote-mark', '.quote-by'], { x: -40, opacity: 0.2 }, { x: 0, opacity: 1, ease: 'none',
+    gsap.fromTo(['.quote-mark', '.quote-by'], { x: -16, opacity: 0.2 }, { x: 0, opacity: 1, ease: 'none',
       scrollTrigger: {
         trigger: desktop.matches ? '.intro' : '.quote-card',
         start: desktop.matches ? 'top 85%' : 'top 75%',
@@ -281,6 +306,8 @@
     });
   });
 
+  }
+
   /* entradas: cada parte da seção sobe em sequência, uma vez */
   var groups = [
     ['.intro', '.h, .narrow p, .h-sm, .pairs li'],
@@ -292,7 +319,13 @@
     ['.sobre', '.h, .letter p, .h-sm, .pairs li, .body'],
     ['.faq', '.h, .facts li, details, .faq-act > *'],
     ['.contact', '.h, .rows-big p, .contact-photo, .tile'],
-    ['.foot', '.foot-mark, .foot-menu nav a, .foot-soc, .legal']
+    ['.foot', '.foot-mark, .foot-menu nav a, .foot-soc, .legal'],
+    ['.on-hero', '.hero-sub, .hero-act, .on-points li, .on-photo'],
+    ['.on-para', '.h, .lede, .pairs li, .on-note'],
+    ['.on-como', '.h, .lede, .slip'],
+    ['.on-precisa', '.h, .lede, .on-needs li'],
+    ['.on-same', '.big, .lede, .hero-act > *'],
+    ['.on-faq', '.h, details, .faq-act > *']
   ];
   groups.forEach(function (g) {
     var root = $(g[0]);
