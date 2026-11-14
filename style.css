@@ -577,10 +577,59 @@ html.lenis{scroll-behavior:auto}
   .on-photo{aspect-ratio:2/1}
   .on-photo img{object-position:50% 22%}
 }
-.on-precisa-grid{display:grid;grid-template-columns:1.3fr .7fr;gap:clamp(32px,5vw,72px);align-items:start}
+.on-precisa-grid{display:block;grid-template-columns:1.3fr .7fr;gap:clamp(32px,5vw,72px);align-items:start}
 .on-precisa-photo{border-radius:var(--r);overflow:hidden;aspect-ratio:3/4}
 .on-precisa-photo img{width:100%;height:100%;object-fit:cover;object-position:50% 20%}
 .on-sec{max-width:none}
 @media (max-width:959.98px){.on-precisa-grid{grid-template-columns:1fr}.on-precisa-photo{aspect-ratio:16/10}}
 @media (max-width:599.98px){.on-photo img{object-position:50% 8%}}
 @media (min-width:960px){.on-faq{display:grid;grid-template-columns:1fr 1.5fr;column-gap:clamp(32px,6vw,96px);align-items:start}.on-faq .h{grid-column:1}.on-faq .qa{grid-column:2;grid-row:1 / span 2;margin-top:0}.on-faq .faq-act{grid-column:1;grid-row:2;margin-top:32px}}
+
+/* versão 5: cobertura da primeira visita e avaliação online em destaque */
+html.rb-cobre body::after{content:"";position:fixed;inset:0;z-index:89;background:var(--navy)}
+.online-card{display:grid;gap:8px;margin-top:56px;padding:clamp(24px,3vw,36px);border-radius:var(--r);background:var(--navy);color:var(--white);text-decoration:none;transition:scale .25s var(--ease),background-color .25s}
+.online-card:hover{background:var(--navy-2)}
+.online-card:active{scale:.99}
+.online-tag{justify-self:start;padding:6px 12px;border-radius:999px;background:var(--sand);color:var(--ink);font-size:var(--step-small);font-weight:600}
+.online-title{margin-top:6px;font-family:Marcellus,"Times New Roman",serif;font-size:clamp(1.8rem,1.2rem + 1.8vw,2.6rem);line-height:1.05}
+.online-text{color:#d6ddee;max-width:36ch}
+.online-go{margin-top:10px;justify-self:start;display:inline-flex;align-items:center;min-height:48px;padding:0 22px;border-radius:999px;background:var(--white);color:var(--navy);font-weight:600}
+.online-go::after{content:"";width:8px;height:8px;margin-left:12px;border-top:2px solid currentColor;border-right:2px solid currentColor;transform:rotate(45deg);transition:transform .25s var(--ease)}
+.online-card:hover .online-go::after{transform:translateX(4px) rotate(45deg)}
+.hero-online{display:inline-flex;align-items:center;gap:10px;margin-top:14px;padding:10px 16px;border-radius:999px;background:var(--navy-2);color:var(--white);font-size:var(--step-small);font-weight:500;text-decoration:none;transition:background-color .2s}
+.hero-online::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--wa)}
+.hero-online:hover{background:#2a3f73}
+.hero-say{display:flex;flex-direction:column;align-items:flex-start}
+.hero-say .hero-act{align-self:stretch}
+@media (max-width:959.98px){
+  .online-card{margin-left:calc(var(--pad) * -1 + var(--inset));margin-right:calc(var(--pad) * -1 + var(--inset))}
+  .online-go{justify-self:stretch;justify-content:center}
+  .hero-online{align-self:stretch;justify-content:center;font-size:.9375rem;padding:14px 16px}
+  .nav-links .nav-online{margin-top:12px;padding:14px 18px;border-radius:999px;background:var(--sand);color:var(--ink);font-weight:600;text-align:center}
+}
+
+/* versão 5: a barra do topo sempre cabe na largura (o Agendar nunca sai da tela) */
+.nav-mark,.nav-ig,.nav-cta,.nav-toggle{flex:none}
+.nav-links{min-width:0}
+.so-cel{display:none}
+@media (max-width:959.98px){
+  .so-pc{display:none}
+  .so-cel{display:inline}
+}
+@media (min-width:960px) and (max-width:1599.98px){
+  .nav-links a[href="#avaliacoes"],.nav-links a[href="#sobre"]{display:none}
+}
+@media (min-width:960px) and (max-width:1279.98px){
+  .nav-links{gap:16px}
+  .nav-links a[href="#laudo"]{display:none}
+  .nav{gap:14px}
+}
+/* toque confortável na nota do Google */
+.hero-proof{min-height:44px}
+/* telas muito estreitas: botões quebram a linha em vez de empurrar a página */
+@media (max-width:400px){
+  .btn{white-space:normal;text-align:center;line-height:1.2;padding-top:10px;padding-bottom:10px}
+  .nav .nav-cta{white-space:nowrap;padding:0 14px}
+  .nav{gap:6px}
+}
+@media (max-width:959.98px){.hero-online{order:1;margin-top:18px}.hero-say .hero-act{order:2;margin-top:14px}.hero-proof{order:3}}

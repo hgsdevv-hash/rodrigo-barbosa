@@ -20,6 +20,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Marcellus&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="media/retrato.webp">
 <link rel="stylesheet" href="style.css">
+<script>
+/* primeira visita: cobre a página desde o primeiro quadro até a abertura começar */
+(function () {
+  try {
+    if (sessionStorage.getItem('rb-open') === '1') return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var raiz = document.documentElement;
+    raiz.classList.add('rb-cobre');
+    setTimeout(function () { raiz.classList.remove('rb-cobre'); }, 4000);
+  } catch (e) { /* sem armazenamento: segue sem cobrir */ }
+})();
+</script>
 </head>
 <body>
 <a class="skip" href="#conteudo">Pular para o conteúdo</a>
@@ -53,7 +65,7 @@
     <a href="#avaliacoes">Avaliações</a>
     <a href="#sobre">Sobre</a>
     <a href="#duvidas">Dúvidas</a>
-    <a href="avaliacao-online.html">Online</a>
+    <a class="nav-online" href="avaliacao-online.html"><span class="so-pc">Online</span><span class="so-cel">Avaliação online</span></a>
   </nav>
   <a class="nav-ig" href="https://www.instagram.com/psirodrigobarbosa/" target="_blank" rel="noopener" aria-label="Instagram @psirodrigobarbosa">
     <svg aria-hidden="true"><use href="#i-ig"/></svg>
@@ -93,6 +105,7 @@
           <span class="stars" aria-hidden="true"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span>
           <span>5,0 no Google, 221 avaliações</span>
         </a>
+        <a class="hero-online" href="avaliacao-online.html">Também atendo online, de qualquer cidade</a>
       </div>
       <div class="wordmark" id="wordmark">Rodrigo Barbosa</div>
     </section>
@@ -121,6 +134,12 @@
         <li><span>Queixas de memória</span><span>em adultos jovens</span></li>
         <li><span>Diagnóstico diferencial</span><span>ansiedade, depressão ou TDAH</span></li>
       </ul>
+
+      <a class="online-card" href="avaliacao-online.html">
+        <span class="online-title">Avaliação online</span>
+        <span class="online-text">Mora em outra cidade? A avaliação também é feita por videochamada, com devolutiva e laudo.</span>
+        <span class="online-go">Ver como funciona</span>
+      </a>
     </section>
 
     <!-- Sinais: a parte viva -->

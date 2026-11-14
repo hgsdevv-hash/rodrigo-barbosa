@@ -185,7 +185,7 @@
   });
 
   /* ---------- movimento ---------- */
-  if (!hasGsap || reduce) return;
+  if (!hasGsap || reduce) { document.documentElement.classList.remove('rb-cobre'); return; }
   var gsap = window.gsap;
   var ST = window.ScrollTrigger;
   gsap.registerPlugin(ST);
@@ -240,7 +240,7 @@
 
   var heroImg = $('.layer[data-layer="hero"] img');
   var intro = gsap.timeline({ defaults: { ease: 'power3.out' } });
-  if (seen) { opener.remove(); intro.progress(1); }
+  document.documentElement.classList.remove('rb-cobre');
   intro
     .to(strokes[0], { strokeDashoffset: 0, duration: 0.42, ease: 'power2.inOut' }, 0)
     .to(strokes[1], { strokeDashoffset: 0, duration: 0.42, ease: 'power2.inOut' }, 0.12)
@@ -250,10 +250,11 @@
     .to(hole, { r: 80, duration: 0.42, ease: 'power2.in', onUpdate: cut }, 0.7)
     .from(heroImg, { scale: 1.1, duration: 1.6, ease: 'power2.out' }, 0.7)
     .from('.hero-title', { y: 26, duration: 0.6 }, 0.86)
-    .from('.hero-sub, .hero-act, .hero-proof', { y: 22, opacity: 0, duration: 0.6, stagger: 0.07 }, 0.9)
+    .from('.hero-sub, .hero-act, .hero-proof, .hero-online', { y: 22, opacity: 0, duration: 0.6, stagger: 0.07 }, 0.9)
     .from('.wordmark', { yPercent: 30, duration: 0.7, clearProps: 'transform' }, 0.88)
-    .from('.nav-mark, .nav-links a, .nav-toggle, .nav-ig', { y: -10, opacity: 0, duration: 0.45, stagger: 0.04 }, 0.94)
+    .from('.nav-mark, .nav-links a, .nav-toggle, .nav-ig, .nav-cta', { y: -10, opacity: 0, duration: 0.45, stagger: 0.04, clearProps: 'transform,opacity' }, 0.94)
     .add(function () { opener.remove(); }, 1.14);
+  if (seen) { intro.progress(1); opener.remove(); }
 
   /* assinatura: o nome pesa e encolhe quando a primeira tela sai */
   if (desktop.matches) {
@@ -310,7 +311,7 @@
 
   /* entradas: cada parte da seção sobe em sequência, uma vez */
   var groups = [
-    ['.intro', '.h, .narrow p, .h-sm, .pairs li'],
+    ['.intro', '.h, .narrow p, .h-sm, .pairs li, .online-card'],
     ['.sinais', '.h, .lede, legend, .row, .note, .btn'],
     ['.etapas', '.h, .lede, .slip'],
     ['.laudo', '.h, .lede, .tabs button, .body, .cell'],
@@ -355,10 +356,14 @@
   });
 
   /* fotos fora do palco */
-  gsap.fromTo('.contact-photo img', { scale: 1.12 }, { scale: 1, ease: 'none',
-    scrollTrigger: { trigger: '.contact', start: 'top bottom', end: 'bottom top', scrub: true } });
-  gsap.fromTo('.foot-photo img', { scale: 1.14 }, { scale: 1, ease: 'none',
-    scrollTrigger: { trigger: '.foot', start: 'top bottom', end: 'bottom bottom', scrub: true } });
+  if ($('.contact-photo img')) {
+    gsap.fromTo('.contact-photo img', { scale: 1.12 }, { scale: 1, ease: 'none',
+      scrollTrigger: { trigger: '.contact', start: 'top bottom', end: 'bottom top', scrub: true } });
+  }
+  if ($('.foot-photo img')) {
+    gsap.fromTo('.foot-photo img', { scale: 1.14 }, { scale: 1, ease: 'none',
+      scrollTrigger: { trigger: '.foot', start: 'top bottom', end: 'bottom bottom', scrub: true } });
+  }
 
   window.addEventListener('load', function () { ST.refresh(); });
 })();
